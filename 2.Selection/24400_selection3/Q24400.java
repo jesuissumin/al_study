@@ -49,7 +49,7 @@ class Q24400 {
         int k = t - p + 1;
         if (q<k) return select(A, p, t-1, q);
         else if (q==k) return A[t];
-        else return select(A, t+1, r, q-k);
+        else return select(A, t+1, r, q-k-1);
     }
 
     private static int partition(int[] A, int p, int r){
@@ -61,6 +61,7 @@ class Q24400 {
                 int tmp = A[i];
                 A[i] = A[j];
                 A[j] = tmp;
+                System.out.printf("swap i:%d (%d) <--> j: %d (%d)\n", i,A[i],j,A[j]);
                 checkSame(A);
             }
         }
@@ -68,6 +69,7 @@ class Q24400 {
             int tmp = A[i+1];
             A[i+1] = A[r];
             A[r] = tmp;
+            System.out.printf("swap i+1:%d (%d) <--> r: %d (%d)\n", i+1,A[i+1],r,A[r]);
             checkSame(A);
         }
         return i+1;
@@ -76,16 +78,16 @@ class Q24400 {
     private static void checkSame(int[] A){
         for (int i=0; i<seqLen; i++){
             if (A[i]!=B[i]) {
-                // String a = "";
-                // for (int j=0; j<seqLen; j++){
-                //     a += A[j];
-                // }
-                // System.out.println("A: "+a);
-                // a = "";
-                // for (int j=0; j<seqLen; j++){
-                //     a += B[j];
-                // }
-                // System.out.println("B: "+a);
+                String a = "";
+                for (int j=0; j<seqLen; j++){
+                    a += A[j];
+                }
+                System.out.println("==A: "+a);
+                a = "";
+                for (int j=0; j<seqLen; j++){
+                    a += B[j];
+                }
+                System.out.println("  B: "+a);
                 return;
             } 
         }
