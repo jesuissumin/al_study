@@ -1,7 +1,4 @@
 import java.io.*;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.StringTokenizer;
 
 class Q9855 {
@@ -31,7 +28,7 @@ class Q9855 {
             }
             String answer = solution(N1, N2, N, elements);
 
-            bw.write(answer + "\n");
+            bw.write(answer);
             bw.flush();
         }
 
@@ -52,9 +49,22 @@ class Q9855 {
         for (int i = 0; i < N; i++) {
             cuckooInsert(T1, T2, elements[i], 1);
         }
-        String output = "";
 
-        return "";
+        String output = "";
+        output += "Table 1\n";
+        for (int i=0; i< N1; i++){
+            if (T1[i] != -1 ){
+                output += String.format("%d:%d\n", i, T1[i]);
+            }
+        }
+        output += "Table 2\n";
+        for (int i=0; i< N2; i++){
+            if (T2[i] != -1 ){
+                output += String.format("%d:%d\n", i, T2[i]);
+            }
+        }
+
+        return output;
     }
 
     private static void cuckooInsert(int[] T1, int[] T2, int newE, int tableIdx) {
