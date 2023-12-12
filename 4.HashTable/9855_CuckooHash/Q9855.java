@@ -5,9 +5,11 @@ class Q9855 {
     private static int N1 = 0; // size of T1
     private static int N2 = 0; // size of T2
     private static int N = 0; // number of elements to insert
+    private static int nCase = 0;
 
     public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedReader br = new BufferedReader(new FileReader("input.txt"));
+        //BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
         while (true) {
@@ -19,13 +21,24 @@ class Q9855 {
             N1 = Integer.parseInt(stk.nextToken());
             N2 = Integer.parseInt(stk.nextToken());
             N = Integer.parseInt(stk.nextToken());
+            if (N==0) continue; // empty table
+            nCase += 1;
+
             int[] elements = new int[N];
 
             line = br.readLine();
             stk = new StringTokenizer(line);
             for (int i = 0; i < N; i++) {
-                elements[i] = Integer.parseInt(stk.nextToken());
+                if (stk.hasMoreTokens()) {
+                    elements[i] = Integer.parseInt(stk.nextToken());
+                } else {
+                    line = br.readLine();
+                    stk = new StringTokenizer(line);
+                    elements[i] = Integer.parseInt(stk.nextToken());
+                }
+                
             }
+            bw.write(String.format("Case %d:\n",nCase));
             String answer = solution(N1, N2, N, elements);
 
             bw.write(answer);
