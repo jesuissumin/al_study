@@ -2,7 +2,6 @@ import java.util.StringTokenizer;
 import java.io.FileReader;
 import java.io.BufferedReader;
 import java.io.PrintWriter;
-
 /*
    1. 아래와 같은 명령어를 입력하면 컴파일이 이루어져야 하며, Solution1 라는 이름의 클래스가 생성되어야 채점이 이루어집니다.
        javac Solution1.java -encoding UTF8
@@ -62,6 +61,80 @@ class Solution1 {
 			 */
 			/////////////////////////////////////////////////////////////////////////////////////////////
 			Answer = 0;
+
+			// 열별로 미리 합 구해두기 s[column][row]
+			int[][] s = new int[n+1][n+1];
+			for (int i=0;i<n+1;i++){
+				for (int j=0;j<n+1;j++){
+					if (i==0 || j==0){
+						s[i][j] = 0;
+					}
+					else {
+						int v = A[i-1][j-1];
+						if (v%2!=0) v *= -1;
+						s[i][j] = s[i][j-1]+v;
+					}
+				}
+			}
+
+			//================================
+			// 시도 1: 3.3초 걸림... 느림...
+			//================================			
+			// int[][] c = new int[n][n];
+			// int[] colSum = new int[n+1];
+			// // 세로 길이 정의
+			// for (int r=0;r<=n;r++){
+			// 	// i 지점을 기점으로한 r+1 만큼의 세로칸을 탐색
+			// 	for (int i=1;i<=n-r;i++){
+			// 		int j = i+r;
+
+			// 		// 최적부분수열 (1D) 구하기
+			// 		colSum[0] = 0;
+			// 		for (int k=1; k<=n; k++){
+			// 			colSum[k] = s[k][j]-s[k][i-1] + colSum[k-1];
+			// 			c[k-1][k-1] = s[k][j]-s[k][i-1];
+			// 		}
+			// 		for (int k=1; k<n; k++){
+			// 			for (int l=0; l<n-k; l++){
+			// 				int h = k+l;
+			// 				int[] ll = {colSum[h+1]-colSum[l], c[l][h-1], c[l+1][h]};
+			// 				c[l][h] = -9999;
+			// 				for (int q=0;q<3;q++){
+			// 					if (c[l][h] < ll[q]) c[l][h] = ll[q];
+			// 				}
+			// 			}
+			// 		}
+			// 		if (Answer < c[0][n-1]) Answer = c[0][n-1];
+			// 	}
+			// }
+
+			//================================
+			// 시도 2: 3.3초 걸림... 느림...
+			//================================	
+			int[] c = new int[n];
+			// 세로 길이 정의
+			for (int r=0;r<=n;r++){
+				// i 지점을 기점으로한 r+1 만큼의 세로칸을 탐색
+				for (int i=1;i<=n-r;i++){
+					int j = i+r;
+
+					// 최적부분수열 (1D) 구하기 (답안 방법대로)
+					for (int k=0; k<n; k++){
+						c[k] = s[k+1][j]-s[k+1][i-1];
+					}
+					int cur = Integer.MIN_VALUE;
+					for (int k=0; k<n; k++){
+						if (k==0) {
+							cur = c[k];
+						}
+						else {
+							cur = Math.max(c[k], cur+c[k]);
+						}
+						Answer = Math.max(Answer,cur);
+
+					}
+				}
+			}
 
 
 			// output4.txt로 답안을 출력합니다.

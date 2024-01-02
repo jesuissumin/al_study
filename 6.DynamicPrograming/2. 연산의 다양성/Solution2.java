@@ -64,6 +64,40 @@ class Solution2 {
 			Answer[1] = 0;  // b 의 갯수
 			Answer[2] = 0;  // c 의 갯수
 
+			long[][] aList = new long[n][n];
+			long[][] bList = new long[n][n];
+			long[][] cList = new long[n][n];
+
+			// 초기화
+			for (int i = 0; i<n; i++){
+				for (int j=0; j<n; j++){
+					aList[i][j] = 0;
+					bList[i][j] = 0;
+					cList[i][j] = 0;
+				}
+			}
+			for (int i=0; i<n; i++){
+				if (s.charAt(i)=='a') aList[i][i] = 1;
+				if (s.charAt(i)=='b') bList[i][i] = 1;
+				if (s.charAt(i)=='c') cList[i][i] = 1;
+			}
+
+			// 문제 크기를 결정
+			for (int r=1; r<n; r++){
+				// 시작 위치 결정
+				for (int i=0;i<n-r;i++) {
+					int j = i+r; // 끝 위치 결정
+					for (int k=i;k<j;k++){
+						aList[i][j] += aList[i][k]*cList[k+1][j] + bList[i][k]*cList[k+1][j] + cList[i][k]*aList[k+1][j];
+						bList[i][j] += aList[i][k]*aList[k+1][j] + aList[i][k]*bList[k+1][j] + bList[i][k]*bList[k+1][j];
+						cList[i][j] += bList[i][k]*aList[k+1][j] + cList[i][k]*bList[k+1][j] + cList[i][k]*cList[k+1][j];
+					}
+				}
+			}
+
+			Answer[0] = aList[0][n-1];
+			Answer[1] = bList[0][n-1];
+			Answer[2] = cList[0][n-1];
 
 			// output4.txt로 답안을 출력합니다.
 			pw.println("#" + test_case + " " + Answer[0] + " " + Answer[1] + " " + Answer[2]);

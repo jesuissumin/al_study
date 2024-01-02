@@ -2,51 +2,51 @@ import java.util.StringTokenizer;
 import java.io.FileReader;
 import java.io.BufferedReader;
 import java.io.PrintWriter;
-
 /*
-   1. 아래와 같은 명령어를 입력하면 컴파일이 이루어져야 하며, Solution4 라는 이름의 클래스가 생성되어야 채점이 이루어집니다.
-       javac Solution3.java -encoding UTF8
+   1. 아래와 같은 명령어를 입력하면 컴파일이 이루어져야 하며, Solution1 라는 이름의 클래스가 생성되어야 채점이 이루어집니다.
+       javac Solution1.java -encoding UTF8
 
 
    2. 컴파일 후 아래와 같은 명령어를 입력했을 때 여러분의 프로그램이 정상적으로 출력파일 output4.txt 를 생성시켜야 채점이 이루어집니다.
-       java Solution3
+       java Solution1
 
    - 제출하시는 소스코드의 인코딩이 UTF8 이어야 함에 유의 바랍니다.
    - 수행시간 측정을 위해 다음과 같이 time 명령어를 사용할 수 있습니다.
-       time java Solution3
+       time java Solution1
    - 일정 시간 초과시 프로그램을 강제 종료 시키기 위해 다음과 같이 timeout 명령어를 사용할 수 있습니다.
-       timeout 0.5 java Solution3   // 0.5초 수행
-       timeout 1 java Solution3     // 1초 수행
+       timeout 0.5 java Solution1   // 0.5초 수행
+       timeout 1 java Solution1     // 1초 수행
  */
 
-class Solution3 {
-	static final int max_n = 100000;
+class Solution4 {
+	static final int max_n = 1000000;
 
 	static int n;
-	static String s;
+	static int[][] A = new int[max_n][3];
 	static int Answer;
 
 	public static void main(String[] args) throws Exception {
 		/*
-		   동일 폴더 내의 input3.txt 로부터 데이터를 읽어옵니다.
-		   또한 동일 폴더 내의 output3.txt 로 정답을 출력합니다.
+		   동일 폴더 내의 input4.txt 로부터 데이터를 읽어옵니다.
+		   또한 동일 폴더 내의 output4.txt 로 정답을 출력합니다.
 		 */
-		BufferedReader br = new BufferedReader(new FileReader("input3.txt"));
+		BufferedReader br = new BufferedReader(new FileReader("input4.txt"));
 		StringTokenizer stk;
-		PrintWriter pw = new PrintWriter("output3.txt");
+		PrintWriter pw = new PrintWriter("output4.txt");
 
 		/*
 		   10개의 테스트 케이스가 주어지므로, 각각을 처리합니다.
 		 */
 		for (int test_case = 1; test_case <= 10; test_case++) {
-			/*
-			   각 테스트 케이스를 파일에서 읽어옵니다.
-               첫 번째 행에 쓰여진 문자열의 길이를 n에 읽어들입니다.
-               그 다음 행에 쓰여진 문자열을 s에 한번에 읽어들입니다.
-			 */
+
 			stk = new StringTokenizer(br.readLine());
 			n = Integer.parseInt(stk.nextToken());
-			s = br.readLine();
+			for (int i = 0; i < 3; i++) {
+				stk = new StringTokenizer(br.readLine());
+				for (int j = 0; j < n; j++) {
+					A[j][i] = Integer.parseInt(stk.nextToken());
+				}
+			}
 
 			/////////////////////////////////////////////////////////////////////////////////////////////
 			/*
@@ -56,24 +56,36 @@ class Solution3 {
 			/////////////////////////////////////////////////////////////////////////////////////////////
 			Answer = 0;
 
-			int[][] C = new int[n+1][n+1];
-			for (int i=0; i<n+1; i++){
-				C[0][i] = 0;
-				C[i][0] = 0;
-			}
-
-			for (int i=1; i<n+1; i++){
-				for (int j=1; j<n+1;j++){
-					if (s.charAt(i-1)==s.charAt(n-j)) {
-						C[i][j] = C[i-1][j-1] + 1;
-					}
-					else {
-						C[i][j] = Math.max(C[i-1][j],C[i][j-1]);
-					}
+			int[][] w = new int[n][6];
+			for (int i=0; i<n; i++){
+				for (int p=0; p<6; p++){
+					w[i][p] = calcScore(A[i],p);
 				}
 			}
 
-			Answer = C[n][n];
+			int[][] comparable = new int[][] {
+				{3, 4},
+				{2, 5},
+				{1, 5},
+				{0, 4},
+				{0, 3},
+				{1, 2}
+			};
+
+			int[][] m = new int[n][6];
+			for (int p=0; p<6; p++){
+				m[0][p] = w[0][p];
+			}
+			for (int i=1; i<n; i++){
+				for (int p=0; p<6; p++){
+					m[i][p] = Math.max(m[i-1][comparable[p][0]], m[i-1][comparable[p][1]]) + w[i][p];
+				}
+			}
+
+			Answer = Integer.MIN_VALUE;
+			for (int p=0; p<6; p++){
+				if (Answer < m[n-1][p]) Answer = m[n-1][p];
+			}
 
 			// output4.txt로 답안을 출력합니다.
 			pw.println("#" + test_case + " " + Answer);
@@ -87,6 +99,21 @@ class Solution3 {
 
 		br.close();
 		pw.close();
+	}
+
+	private static int calcScore(int[] s, int p){
+		// p1 = + 0 -
+		// p2 = + - 0
+		// p3 = 0 + -
+		// p4 = 0 - +
+		// p5 = - + 0
+		// p6 = - 0 +
+		if (p==0) return s[0]-s[2];
+		if (p==1) return s[0]-s[1];
+		if (p==2) return s[1]-s[2];
+		if (p==3) return -s[1]+s[2];
+		if (p==4) return -s[0]+s[1];
+		else return -s[0]+s[2];
 	}
 }
 
