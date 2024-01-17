@@ -80,7 +80,30 @@ class Solution3 {
 			   문제의 답을 계산하여 그 값을 Answer에 저장하는 것을 가정하였습니다.
 			 */
 			/////////////////////////////////////////////////////////////////////////////////////////////
-			
+			// 수민: 플로이드-워샬 알고리즘 이용 O(N^3)
+			for (int i=1; i<N+1; i++){
+				for (int j=1; j<N+1; j++){
+					d[0][i][j] = Table[i][j];
+				}
+			}
+
+			for (int k=1; k<N+1; k++){
+				for (int i=1; i<N+1; i++){
+					for (int j=1; j<N+1; j++){
+						if (d[k-1][i][j] > sumDist(d[k-1][i][k], d[k-1][k][j])){
+							d[k][i][j] = sumDist(d[k-1][i][k],d[k-1][k][j]);
+						}
+						else {
+							d[k][i][j] = d[k-1][i][j];
+						}
+					}
+				}
+			}
+			for (int i=1;i<N+1;i++){
+				for (int j=1;j<N+1;j++){
+					Answer = Answer + d[N][i][j];
+				}
+			}
 			// output3.txt로 답안을 출력합니다.
 			pw.println("#" + test_case + " " + Answer);
 			/*

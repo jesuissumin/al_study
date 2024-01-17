@@ -69,7 +69,20 @@ class Solution2 {
 			   문제의 답을 계산하여 그 값을 Answer에 저장하는 것을 가정하였습니다.
 			 */
 			/////////////////////////////////////////////////////////////////////////////////////////////
-			
+			// 수민: kruskal algorithm으로 최소 신장 트리를 찾은 후 -를 곱해주면 최대값이 됩니다.
+			// 수민: initialize set			
+			setTree = new SetTree(N);
+			int numTreeEdge = 0;
+			while (numTreeEdge < N-1) {
+				Edge e = minHeap.poll();
+				if (setTree.findSet(e.u-1) != setTree.findSet(e.v-1)){
+					numTreeEdge = numTreeEdge + 1;
+					setTree.union(e.u-1, e.v-1);
+					Answer = Answer + e.w;
+				}
+
+			}
+			Answer = Answer*(-1);
 
 			// output2.txt로 답안을 출력합니다.
 			pw.println("#" + test_case + " " + Answer);

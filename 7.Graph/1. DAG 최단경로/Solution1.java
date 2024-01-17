@@ -74,7 +74,32 @@ class Solution1 {
 			   문제의 답을 계산하여 출력해야 할 전체 N-1개의 수를 Answer[0], Answer[1], ... , Answer[N-2]에 저장하는 것을 가정하였습니다.
 			 */
 			/////////////////////////////////////////////////////////////////////////////////////////////
+			// 수민: 거리, 직전 노드 초기화 O(N)
+			for (int i = 0; i < N; i++) {
+				Answer[i] = Integer.MAX_VALUE;
+				prev[i] = Integer.MAX_VALUE;
+				visited[i] = false;
+			}
+			Answer[0] = 0;
+			prev[0] = 0;
 
+			// 수민: 위상정렬 O(N+E)
+			uTop = new LinkedList<Integer>();
+			for (int i = 0; i < N; i++) {
+				if ( visited[i] == false ) {
+					DFS(i);
+				}
+			}
+
+			// 수민: 최단거리 업데이트, 간선 한번씩만 검토하니깐 O(E)인 것 같은데 왜 책은 O(E+V)라고 되어있나요?
+			for (int u : uTop) {
+				for (Edges e : Vertexes[u]){
+					if ( sumDist(Answer[u-1],e.w) < Answer[e.v-1]) {
+						Answer[e.v-1] = Answer[u-1]+e.w;
+						prev[e.v-1] = u;
+					}
+				}
+			}
 
 
 			// output1.txt로 답안을 출력합니다. 문자 'X'를 출력하기 위해 필요에 따라 아래 코드를 수정하셔도 됩니다.
