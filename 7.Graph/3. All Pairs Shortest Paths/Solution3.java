@@ -119,7 +119,7 @@ class Solution3 {
 	}
 
 	static int sumDist(int d, int w){
-		if (d==Integer.MAX_VALUE ) {
+		if ((d==Integer.MAX_VALUE ) || (w==Integer.MAX_VALUE)){
 			return Integer.MAX_VALUE;
 		}
 		else {
