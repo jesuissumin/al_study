@@ -25,7 +25,7 @@ class Solution1 {
 	static int N, E;
 	static int[] U = new int[MAX_E], V = new int[MAX_E], W = new int[MAX_E];
 	static int[] Answer = new int[MAX_N+1];
-	static LinkedList<Edges>[] Vertexes = new LinkedList[MAX_N+1]; // 수민: type safety warning 뜨는데 어떻게하면 좋을까요. (edges가 generic이라고 경고)
+	static List<LinkedList<Edges>> Vertexes = new LinkedList[MAX_N+1]; // 수민: type safety warning 뜨는데 어떻게하면 좋을까요. (edges가 generic이라고 경고)
 	static int[] prev = new int[MAX_N+1];
 	static boolean[] visited = new boolean[MAX_N+1];
 	static LinkedList<Integer> uTop = new LinkedList<Integer>();
@@ -91,7 +91,7 @@ class Solution1 {
 				}
 			}
 
-			// 수민: 최단거리 업데이트, 간선 한번씩만 검토하니깐 O(E)인 것 같은데 왜 책은 O(E+V)라고 되어있나요?
+			// 수민: 최단거리 업데이트
 			for (int u : uTop) {
 				for (Edges e : Vertexes[u]){
 					if ( sumDist(Answer[u-1],e.w) < Answer[e.v-1]) {
